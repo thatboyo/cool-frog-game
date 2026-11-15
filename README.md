@@ -1,2 +1,4 @@
 something cool coming soon
-,h,v
+cool frog game made in godot, 
+kinda like sonic, mario, and the power 
+of a frog!
