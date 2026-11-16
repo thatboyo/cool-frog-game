@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bnulkd3oab1hl" path="res://Add a heading.png" id="9_4c57u"]
 [ext_resource type="PackedScene" uid="uid://tbm26od1k6mv" path="res://kill.tscn" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://bd6q6cbymg6wd" path="res://lilypad.tscn" id="11_efxa6"]
+[ext_resource type="PackedScene" uid="uid://d0xr5v4lfwqmi" path="res://dino.tscn" id="12_dg77c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g1omk"]
 size = Vector2(22.75, 18.5)
@@ -213,3 +214,43 @@ position = Vector2(6047.876, 75.68646)
 
 [node name="lilypad" parent="lilypad2" unique_id=2138292635 instance=ExtResource("11_efxa6")]
 position = Vector2(-5564.609, -75.33197)
+
+[node name="dino" parent="." unique_id=112395276 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(25, -30)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
+
+[node name="dino" parent="dino" unique_id=1318159381 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(948, 45)
+respawn_point = NodePath("../../respawnPoint")
+you_died_ui = NodePath("../../you_died_ui")
+
+[node name="dino" parent="dino/dino" unique_id=2028705200 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(757.33594, -39.59369)
+respawn_point = NodePath("../../../respawnPoint")
+you_died_ui = NodePath("../../../you_died_ui")
+
+[node name="dino" parent="dino/dino/dino" unique_id=1477443629 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(2038.6667, -11.333405)
+respawn_point = NodePath("../../../../respawnPoint")
+you_died_ui = NodePath("../../../../you_died_ui")
+
+[node name="dino" parent="dino/dino/dino/dino" unique_id=704644871 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(650.00024, -9.9999695)
+respawn_point = NodePath("../../../../../respawnPoint")
+you_died_ui = NodePath("../../../../../you_died_ui")
+
+[node name="dino" parent="dino/dino/dino/dino/dino" unique_id=1529102317 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(804.00146, 209.33331)
+respawn_point = NodePath("../../../../../../respawnPoint")
+you_died_ui = NodePath("../../../../../../you_died_ui")
+
+[node name="dino" parent="dino/dino/dino/dino/dino/dino" unique_id=1151391206 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(1188.9956, -215.40625)
+respawn_point = NodePath("../../../../../../../respawnPoint")
+you_died_ui = NodePath("../../../../../../../you_died_ui")
+
+[node name="dino" parent="dino/dino/dino/dino/dino/dino/dino" unique_id=950444883 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(1349, 22)
+respawn_point = NodePath("../../../../../../../../respawnPoint")
+you_died_ui = NodePath("../../../../../../../../you_died_ui")
