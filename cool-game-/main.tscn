@@ -206,6 +206,11 @@ position = Vector2(77, 1)
 respawn_point = NodePath("../../../../../../../../../respawnPoint")
 you_died_ui = NodePath("../../../../../../../../../you_died_ui")
 
+[node name="dino" parent="killBrick8/killBrick8" unique_id=1978293361 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("12_dg77c")]
+position = Vector2(-4055, -29)
+respawn_point = NodePath("../../../respawnPoint")
+you_died_ui = NodePath("../../../you_died_ui")
+
 [node name="lilypad" parent="." unique_id=1429117010 instance=ExtResource("11_efxa6")]
 position = Vector2(3551, -222)
 
