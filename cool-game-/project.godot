@@ -49,4 +49,4 @@ left={
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
-environment/defaults/default_clear_color=Color(0.29862237, 0.5887834, 0.8941163, 1)
+environment/defaults/default_clear_color=Color(8.663535e-07, 0.6146568, 0.6658558, 1)
