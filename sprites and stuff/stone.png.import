@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdoffqnbkwsv4"
-path="res://.godot/imported/Frog Portal.png.png-0732f9c5e952527b57d55398b0d3a1bf.ctex"
+uid="uid://bsgyuw6mvnr8e"
+path="res://.godot/imported/stone.png-a2a8988a561c5237c9369364fd6a193d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Frog Portal.png.png"
-dest_files=["res://.godot/imported/Frog Portal.png.png-0732f9c5e952527b57d55398b0d3a1bf.ctex"]
+source_file="res://sprites and stuff/stone.png"
+dest_files=["res://.godot/imported/stone.png-a2a8988a561c5237c9369364fd6a193d.ctex"]
 
 [params]
 

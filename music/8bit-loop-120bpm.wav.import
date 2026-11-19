@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bcj07kmk5lwso"
-path="res://.godot/imported/8bit-loop-120bpm.wav-13be4a8acb7c4072ec2035e8a2cdf03c.sample"
+path="res://.godot/imported/8bit-loop-120bpm.wav-a2f4629c7d3b986ada198b0716d2a0e2.sample"
 
 [deps]
 
-source_file="res://8bit-loop-120bpm.wav"
-dest_files=["res://.godot/imported/8bit-loop-120bpm.wav-13be4a8acb7c4072ec2035e8a2cdf03c.sample"]
+source_file="res://music/8bit-loop-120bpm.wav"
+dest_files=["res://.godot/imported/8bit-loop-120bpm.wav-a2f4629c7d3b986ada198b0716d2a0e2.sample"]
 
 [params]
 

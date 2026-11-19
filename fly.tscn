@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bqjodbw2mgdxx"]
+
+[ext_resource type="Script" uid="uid://ht3mvlqtkqc8" path="res://fly.gd" id="1_qarim"]
+[ext_resource type="Texture2D" uid="uid://c8e0xyqi53tlj" path="res://sprites and stuff/fly.png" id="2_qarim"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g1omk"]
+size = Vector2(18, 12.34375)
+
+[node name="fly" type="Area2D" unique_id=1118981435]
+script = ExtResource("1_qarim")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=483477646]
+position = Vector2(-4, -2.828125)
+shape = SubResource("RectangleShape2D_g1omk")
+debug_color = Color(0.8055751, 0.35769567, 0.56073457, 0.41960785)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1039988142]
+position = Vector2(1.2187493, 3.1875)
+scale = Vector2(0.060546868, 0.06713867)
+texture = ExtResource("2_qarim")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

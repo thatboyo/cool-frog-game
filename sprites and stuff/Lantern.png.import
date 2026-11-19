@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wp0f5ojacw4w"
-path="res://.godot/imported/pixil-frame-0 (4).png-5b7c4cefe8b10dac5cce565dcdfc830f.ctex"
+uid="uid://cv7lmsnrohnve"
+path="res://.godot/imported/Lantern.png-0450c43b184b29a6b6aefe296125bd72.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites and stuff/pixil-frame-0 (4).png"
-dest_files=["res://.godot/imported/pixil-frame-0 (4).png-5b7c4cefe8b10dac5cce565dcdfc830f.ctex"]
+source_file="res://sprites and stuff/Lantern.png"
+dest_files=["res://.godot/imported/Lantern.png-0450c43b184b29a6b6aefe296125bd72.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsgyuw6mvnr8e"
-path="res://.godot/imported/stone.png-083619ed9cb60da6213c6ca04d200509.ctex"
+uid="uid://bgw5gqqxjmkd3"
+path="res://.godot/imported/alligator.png-3c14198b095f198643bf9554a018acc8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://stone.png"
-dest_files=["res://.godot/imported/stone.png-083619ed9cb60da6213c6ca04d200509.ctex"]
+source_file="res://sprites and stuff/alligator.png"
+dest_files=["res://.godot/imported/alligator.png-3c14198b095f198643bf9554a018acc8.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx5agt7q1bm4v"
-path="res://.godot/imported/Puurtal.png-2b4a58699620d1349577c85d4b8d2676.ctex"
+uid="uid://b02vc187fd6ct"
+path="res://.godot/imported/untitled-pixel-art@1x (1).png-21da9ddb3a9e6cedd89dd38b7794831b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Puurtal.png"
-dest_files=["res://.godot/imported/Puurtal.png-2b4a58699620d1349577c85d4b8d2676.ctex"]
+source_file="res://sprites and stuff/untitled-pixel-art@1x (1).png"
+dest_files=["res://.godot/imported/untitled-pixel-art@1x (1).png-21da9ddb3a9e6cedd89dd38b7794831b.ctex"]
 
 [params]
 

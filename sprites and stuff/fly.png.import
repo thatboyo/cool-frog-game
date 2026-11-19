@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lhhgeqlysydr"
-path="res://.godot/imported/dino.png-b373cc7ced4eaa6ae6d6b1019cea739a.ctex"
+uid="uid://c8e0xyqi53tlj"
+path="res://.godot/imported/fly.png-3ce793714b22fb395203a2a53b2950c7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://dino.png"
-dest_files=["res://.godot/imported/dino.png-b373cc7ced4eaa6ae6d6b1019cea739a.ctex"]
+source_file="res://sprites and stuff/fly.png"
+dest_files=["res://.godot/imported/fly.png-3ce793714b22fb395203a2a53b2950c7.ctex"]
 
 [params]
 
