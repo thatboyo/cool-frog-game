@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://tbm26od1k6mv"]
+
+[ext_resource type="Texture2D" uid="uid://71rh6hpls24o" path="res://sprites and stuff/lava.png" id="1_it5pd"]
+[ext_resource type="Script" uid="uid://c6wanlpcl60k4" path="res://kill_brick.gd" id="1_py822"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g1omk"]
+size = Vector2(32, 35.375)
+
+[node name="killBrick" type="Area2D" unique_id=1118981435]
+script = ExtResource("1_py822")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1039988142]
+texture = ExtResource("1_it5pd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=483477646]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_g1omk")
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=1555942006]
+position = Vector2(31, 0)
+texture = ExtResource("1_it5pd")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=1062055351]
+position = Vector2(31, -0.625)
+shape = SubResource("RectangleShape2D_g1omk")
+
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=1259584387]
+position = Vector2(-32, 0)
+texture = ExtResource("1_it5pd")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="." unique_id=1738422232]
+position = Vector2(-32, -0.25)
+shape = SubResource("RectangleShape2D_g1omk")
+
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=1046818464]
+position = Vector2(-64, 0)
+texture = ExtResource("1_it5pd")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="." unique_id=922616172]
+position = Vector2(-64, -0.3125)
+shape = SubResource("RectangleShape2D_g1omk")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

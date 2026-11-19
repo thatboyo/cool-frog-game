@@ -1,0 +1,340 @@
+extends RefCounted
+
+## Screen-tile light culling grid: bins each positional light into the tiles its
+## footprint touches and publishes the header/index textures the shader culls with.
+
+# Screen tile edge in pixels for the light-culling grid. Must match the shader's tile
+# math (it divides SCREEN_UV * viewport by lit_tile_size).
+const TILE_SIZE := 64
+
+const FrameContext := preload("res://addons/lit/runtime/registry/frame_context.gd")
+
+# Width of the flat tile-index texture; a flat index maps to (i % WIDTH, i / WIDTH).
+# Must match LIT_INDEX_TEX_WIDTH in lit_receiver_common.gdshaderinc.
+const INDEX_TEX_WIDTH := 2048
+
+var _tile_header_tex: ImageTexture
+var _tile_index_tex: ImageTexture
+# Re-setting a texture global dirties every material declaring it (a per-material
+# main-thread walk in the RenderingServer), so publish only when the texture OBJECT
+# changes; contents flow through update().
+var _published_header_tex: Texture2D = null
+var _published_index_tex: Texture2D = null
+
+# Reused tile-build scratch, kept across frames so steady state allocates nothing.
+var _tile_counts: PackedInt32Array = PackedInt32Array()
+# Accepted tiles as row runs: first tile | run length | light row, three ints each.
+var _spans: PackedInt32Array = PackedInt32Array()
+var _header_buf: PackedFloat32Array = PackedFloat32Array()
+var _index_buf: PackedFloat32Array = PackedFloat32Array()
+var _header_img: Image
+var _index_img: Image
+
+
+## Bin each positional light into the tiles its screen footprint touches, then upload a
+## per-tile header (offset | count) and a flat index list of light rows. The shader reads
+## its own tile's header and shades only those rows. Directionals are skipped (they're
+## full-screen and shaded directly). Culling is conservative: only (tile, light) pairs
+## the shader would shade to exactly zero are dropped, so it never changes the image.
+func build_and_publish(ctx: FrameContext) -> void:
+	var visible: Array = ctx.visible
+	var canvas_xform: Transform2D = ctx.canvas_xform
+	var vp_size: Vector2 = ctx.vp_size
+	var scale: float = ctx.canvas_scale
+	var tiles_x := int(ceil(vp_size.x / float(TILE_SIZE)))
+	var tiles_y := int(ceil(vp_size.y / float(TILE_SIZE)))
+	tiles_x = max(tiles_x, 1)
+	tiles_y = max(tiles_y, 1)
+	var tile_count := tiles_x * tiles_y
+
+	# Gather each light's accepted tiles as one run per tile row, counted through a
+	# difference array, then scatter the runs into the contiguous per-tile layout.
+	if _tile_counts.size() != tile_count + 1:
+		_tile_counts.resize(tile_count + 1)
+	_tile_counts.fill(0)
+	_spans.clear()
+
+	# `scale` is the world-to-screen pixel factor (the larger canvas-basis axis, so a
+	# zoomed or non-uniformly scaled view over-includes rather than clips a light's
+	# footprint). It matches the shader's lit_canvas_scale, computed once in refresh().
+
+	# Slack in screen px for CPU/GPU float disagreement at a footprint's exact boundary.
+	const CULL_PAD := 2.0
+
+	var ts := float(TILE_SIZE)
+	var last_x := tiles_x - 1
+	var kinds: PackedByteArray = ctx.kinds
+	for i in visible.size():
+		# Directionals aren't tiled; the shader sweeps them for every fragment.
+		var kind := kinds[i]
+		if kind == 1:
+			continue
+
+		# range lives on each positional light type; fetch it dynamically.
+		var light := visible[i] as Node2D
+		var xf := light.global_transform
+		var center: Vector2 = canvas_xform * xf.origin
+		var light_range: float = float(light.get("range")) * maxf(xf.x.length(), xf.y.length()) * scale + CULL_PAD
+		var range_sq := light_range * light_range
+
+		# A spot's cone (half-angle under 90 degrees) is the intersection of two
+		# half-planes through the light; a tile fully outside either can't intersect it.
+		# The angle is padded so the CPU never culls a fragment the GPU would light.
+		var cone_valid := false
+		var n_plus := Vector2.ZERO
+		var n_minus := Vector2.ZERO
+		if kind == 2:
+			var spot := visible[i] as LitSpotLight2D
+			var half_angle := deg_to_rad(spot.spot_angle) + 0.002
+			if half_angle < PI * 0.5 - 0.001:
+				var aim_px := canvas_xform.basis_xform(Vector2.from_angle(spot.global_rotation))
+				if aim_px.length_squared() > 0.0:
+					var phi := aim_px.angle()
+					n_plus = Vector2.from_angle(phi + half_angle - PI * 0.5)
+					n_minus = Vector2.from_angle(phi - half_angle + PI * 0.5)
+					cone_valid = true
+
+		if kind >= 3:
+			# A line light's footprint is its segment grown by range (a capsule): per tile
+			# row its span is the union of the two end discs (the circle formula below) and
+			# the straight part, the segment clipped to the band grown by r|n.y| and widened
+			# by r|n.x| (n the segment's unit normal): exact, like the circle. Its own
+			# loop, so the point loop below stays as lean as it was.
+			var line: LitLineLight2D = visible[i]
+			var half_px: Vector2
+			if kind == 4 and line.path_straight():
+				var seg := (canvas_xform * xf) * line.path_segment()
+				center = (seg[0] + seg[1]) * 0.5
+				half_px = (seg[1] - seg[0]) * 0.5
+			elif kind == 4:
+				# A curved line fills the tiles under its chain's screen bounds grown by range.
+				var sr := line.path_rect_in(canvas_xform * xf).grow(light_range)
+				var cy0 := clampi(int(floor(sr.position.y / float(TILE_SIZE))), 0, tiles_y - 1)
+				var cy1 := clampi(int(floor(sr.end.y / float(TILE_SIZE))), 0, tiles_y - 1)
+				var cx0 := clampi(int(floor(sr.position.x / float(TILE_SIZE))), 0, tiles_x - 1)
+				var cx1 := clampi(int(floor(sr.end.x / float(TILE_SIZE))), 0, tiles_x - 1)
+				# A negative range can shrink the bounds to no column.
+				if cx1 < cx0:
+					continue
+				for ty in range(cy0, cy1 + 1):
+					var row_base := ty * tiles_x
+					_spans.push_back(row_base + cx0)
+					_spans.push_back(cx1 - cx0 + 1)
+					_spans.push_back(i)
+					_tile_counts[row_base + cx0] += 1
+					_tile_counts[row_base + cx1 + 1] -= 1
+				continue
+			else:
+				half_px = canvas_xform.basis_xform(xf.basis_xform(Vector2(line.length * 0.5, 0.0)))
+			var ax := center.x - half_px.x
+			var ay := center.y - half_px.y
+			var bx := center.x + half_px.x
+			var by := center.y + half_px.y
+			var grow_y := 0.0
+			var grow_x := 0.0
+			var len := half_px.length()
+			if len > 0.0:
+				grow_y = light_range * absf(half_px.x) / len
+				grow_x = light_range * absf(half_px.y) / len
+			var ext_y := absf(half_px.y)
+			var ly0 := clampi(int(floor((center.y - ext_y - light_range) / float(TILE_SIZE))), 0, tiles_y - 1)
+			var ly1 := clampi(int(floor((center.y + ext_y + light_range) / float(TILE_SIZE))), 0, tiles_y - 1)
+			for ty in range(ly0, ly1 + 1):
+				var y0 := float(ty * TILE_SIZE)
+				var y1 := y0 + float(TILE_SIZE)
+				var x_lo := 1e20
+				var x_hi := -1e20
+				var dy_a := ay - clampf(ay, y0, y1)
+				var rem_a := range_sq - dy_a * dy_a
+				if rem_a >= 0.0:
+					var ha := sqrt(rem_a)
+					x_lo = ax - ha
+					x_hi = ax + ha
+				var dy_b := by - clampf(by, y0, y1)
+				var rem_b := range_sq - dy_b * dy_b
+				if rem_b >= 0.0:
+					var hb := sqrt(rem_b)
+					x_lo = minf(x_lo, bx - hb)
+					x_hi = maxf(x_hi, bx + hb)
+				var sdy := by - ay
+				if absf(sdy) >= 1e-6:
+					var t0 := (y0 - grow_y - ay) / sdy
+					var t1 := (y1 + grow_y - ay) / sdy
+					var t_min := minf(t0, t1)
+					var t_max := maxf(t0, t1)
+					if t_max >= 0.0 and t_min <= 1.0:
+						var xa := ax + (bx - ax) * clampf(t_min, 0.0, 1.0)
+						var xb := ax + (bx - ax) * clampf(t_max, 0.0, 1.0)
+						x_lo = minf(x_lo, minf(xa, xb) - grow_x)
+						x_hi = maxf(x_hi, maxf(xa, xb) + grow_x)
+				elif ay >= y0 - grow_y and ay <= y1 + grow_y:
+					x_lo = minf(x_lo, minf(ax, bx) - grow_x)
+					x_hi = maxf(x_hi, maxf(ax, bx) + grow_x)
+				if x_lo > x_hi:
+					continue
+				var tx0 := clampi(int(floor(x_lo / float(TILE_SIZE))), 0, tiles_x - 1)
+				var tx1 := clampi(int(floor(x_hi / float(TILE_SIZE))), 0, tiles_x - 1)
+				var row_base := ty * tiles_x
+				_spans.push_back(row_base + tx0)
+				_spans.push_back(tx1 - tx0 + 1)
+				_spans.push_back(i)
+				_tile_counts[row_base + tx0] += 1
+				_tile_counts[row_base + tx1 + 1] -= 1
+			continue
+
+		# Per tile row, the circle's horizontal reach (sqrt(r^2 - dy^2), dy = the row
+		# band's closest approach) gives the exact tile span; no per-tile distance test.
+		var cx := center.x
+		var cy := center.y
+		var ty0 := clampi(floori((cy - light_range) / ts), 0, tiles_y - 1)
+		var ty1 := clampi(floori((cy + light_range) / ts), 0, tiles_y - 1)
+		var y0 := float(ty0 * TILE_SIZE) - ts
+		var row_base := (ty0 - 1) * tiles_x
+		for ty in range(ty0, ty1 + 1):
+			y0 += ts
+			row_base += tiles_x
+			var y1 := y0 + ts
+			var dy := cy - clampf(cy, y0, y1)
+			var rem := range_sq - dy * dy
+			if rem < 0.0:
+				continue
+			var half := sqrt(rem)
+			var tx0 := clampi(floori((cx - half) / ts), 0, last_x)
+			var tx1 := clampi(floori((cx + half) / ts), 0, last_x)
+			if cone_valid:
+				# Cone vs tile rect: dot() is linear over the rect, so its maximum sits
+				# at the corner picked by the normal's signs; a tile containing the
+				# light always passes. The tiles passing both half-planes form one run.
+				var run := _plane_run(tx0, tx1, n_plus, (y1 if n_plus.y > 0.0 else y0) - cy, cx, ts)
+				if run.x <= run.y:
+					run = _plane_run(run.x, run.y, n_minus, (y1 if n_minus.y > 0.0 else y0) - cy, cx, ts)
+				if run.x > run.y:
+					continue
+				tx0 = run.x
+				tx1 = run.y
+			_spans.push_back(row_base + tx0)
+			_spans.push_back(tx1 - tx0 + 1)
+			_spans.push_back(i)
+			_tile_counts[row_base + tx0] += 1
+			_tile_counts[row_base + tx1 + 1] -= 1
+
+	# Header: one texel per tile (offset | count); index list: as many rows as needed.
+	var header_floats := tile_count * 2
+	if _header_buf.size() != header_floats:
+		_header_buf.resize(header_floats)
+
+	# Prefix-sum the difference array into counts and start offsets; _tile_counts
+	# becomes the scatter cursor.
+	var offset := 0
+	var cnt := 0
+	for t in tile_count:
+		cnt += _tile_counts[t]
+		_header_buf[t * 2] = float(offset)
+		_header_buf[t * 2 + 1] = float(cnt)
+		_tile_counts[t] = offset
+		offset += cnt
+	var total_indices := offset
+	var idx_rows := int(ceil(float(maxi(total_indices, 1)) / float(INDEX_TEX_WIDTH)))
+	var index_floats := INDEX_TEX_WIDTH * idx_rows
+	if _index_buf.size() != index_floats:
+		_index_buf.resize(index_floats)
+	# Entries past total_indices are never read (counts bound the shader's loop), so
+	# the index buffer needs no clearing.
+
+	# Scatter the runs in light order, so every tile lists its lights in row order.
+	var s := 0
+	var span_end := _spans.size()
+	while s < span_end:
+		var first := _spans[s]
+		var row := float(_spans[s + 2])
+		for t in range(first, first + _spans[s + 1]):
+			var slot := _tile_counts[t]
+			_tile_counts[t] = slot + 1
+			_index_buf[slot] = row
+		s += 3
+
+	_upload_tile_textures(tiles_x, tiles_y, idx_rows)
+
+	RenderingServer.global_shader_parameter_set("lit_tile_size", TILE_SIZE)
+	RenderingServer.global_shader_parameter_set("lit_tile_grid", Vector2i(tiles_x, tiles_y))
+	_publish_tile_textures()
+
+## The tiles of [lo, hi] in one row (py: the picked corner's y offset from the light)
+## that the half-plane through the light with normal n keeps. The picked corner's dot
+## product moves one way along the row, so each end starts at the analytic boundary and
+## steps to the exact one; empty when x > y.
+static func _plane_run(lo: int, hi: int, n: Vector2, py: float, cx: float, ts: float) -> Vector2i:
+	var b := py * n.y
+	if n.x > 0.0:
+		var k := clampi(ceili((cx - b / n.x) / ts) - 1, lo, hi + 1)
+		while k > lo and not (((float((k - 1) * TILE_SIZE) + ts) - cx) * n.x + b < 0.0):
+			k -= 1
+		while k <= hi and ((float(k * TILE_SIZE) + ts) - cx) * n.x + b < 0.0:
+			k += 1
+		return Vector2i(k, hi)
+	if n.x < 0.0:
+		var k := clampi(floori((cx - b / n.x) / ts), lo - 1, hi)
+		while k < hi and not ((float((k + 1) * TILE_SIZE) - cx) * n.x + b < 0.0):
+			k += 1
+		while k >= lo and (float(k * TILE_SIZE) - cx) * n.x + b < 0.0:
+			k -= 1
+		return Vector2i(lo, k)
+	if (float(lo * TILE_SIZE) - cx) * n.x + b < 0.0:
+		return Vector2i(1, 0)
+	return Vector2i(lo, hi)
+
+## Upload the header/index buffers, reusing Images/ImageTextures until a size changes.
+func _upload_tile_textures(tiles_x: int, tiles_y: int, idx_rows: int) -> void:
+	var header_bytes := _header_buf.to_byte_array()
+	if _header_img == null or _header_img.get_width() != tiles_x or _header_img.get_height() != tiles_y:
+		_header_img = Image.create_from_data(tiles_x, tiles_y, false, Image.FORMAT_RGF, header_bytes)
+	else:
+		_header_img.set_data(tiles_x, tiles_y, false, Image.FORMAT_RGF, header_bytes)
+	if _tile_header_tex == null or _tile_header_tex.get_size() != Vector2(_header_img.get_size()):
+		_tile_header_tex = ImageTexture.create_from_image(_header_img)
+	else:
+		_tile_header_tex.update(_header_img)
+
+	var index_bytes := _index_buf.to_byte_array()
+	if _index_img == null or _index_img.get_height() != idx_rows:
+		_index_img = Image.create_from_data(INDEX_TEX_WIDTH, idx_rows, false, Image.FORMAT_RF, index_bytes)
+	else:
+		_index_img.set_data(INDEX_TEX_WIDTH, idx_rows, false, Image.FORMAT_RF, index_bytes)
+	if _tile_index_tex == null or _tile_index_tex.get_size() != Vector2(_index_img.get_size()):
+		_tile_index_tex = ImageTexture.create_from_image(_index_img)
+	else:
+		_tile_index_tex.update(_index_img)
+
+## Publish a valid but empty tile grid (all counts zero) for the zero-light case, so the
+## shader's tiling path stays valid and simply shades nothing.
+func publish_empty(vp_size: Vector2) -> void:
+	var tiles_x := max(int(ceil(vp_size.x / float(TILE_SIZE))), 1)
+	var tiles_y := max(int(ceil(vp_size.y / float(TILE_SIZE))), 1)
+	var header_img := Image.create(tiles_x, tiles_y, false, Image.FORMAT_RGF)
+	header_img.fill(Color(0.0, 0.0, 0.0, 0.0))
+	var index_img := Image.create(INDEX_TEX_WIDTH, 1, false, Image.FORMAT_RF)
+
+	_tile_header_tex = _make_or_update(_tile_header_tex, header_img)
+	_tile_index_tex = _make_or_update(_tile_index_tex, index_img)
+
+	RenderingServer.global_shader_parameter_set("lit_tile_size", TILE_SIZE)
+	RenderingServer.global_shader_parameter_set("lit_tile_grid", Vector2i(tiles_x, tiles_y))
+	_publish_tile_textures()
+
+
+func _publish_tile_textures() -> void:
+	if _tile_header_tex != _published_header_tex:
+		_published_header_tex = _tile_header_tex
+		RenderingServer.global_shader_parameter_set("lit_tile_headers", _tile_header_tex)
+	if _tile_index_tex != _published_index_tex:
+		_published_index_tex = _tile_index_tex
+		RenderingServer.global_shader_parameter_set("lit_tile_indices", _tile_index_tex)
+
+## Reuse an ImageTexture when the image size is unchanged; reallocate on resize.
+## ImageTexture.get_size() is Vector2 while Image.get_size() is Vector2i, so compare
+## in a single type.
+func _make_or_update(tex: ImageTexture, img: Image) -> ImageTexture:
+	if tex == null or tex.get_size() != Vector2(img.get_size()):
+		return ImageTexture.create_from_image(img)
+	tex.update(img)
+	return tex

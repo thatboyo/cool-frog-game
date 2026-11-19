@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://d0xr5v4lfwqmi"]
+
+[ext_resource type="Script" uid="uid://wwsrop7xpbwc" path="res://dino.gd" id="1_nb2aw"]
+[ext_resource type="Texture2D" uid="uid://cmd4i00t54d7o" path="res://sprites and stuff/dino.png" id="2_nb2aw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g1omk"]
+size = Vector2(58.875, 25)
+
+[node name="dino" type="Area2D" unique_id=1118981435]
+script = ExtResource("1_nb2aw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1039988142]
+texture = ExtResource("2_nb2aw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=483477646]
+position = Vector2(5.4375, 2.5)
+shape = SubResource("RectangleShape2D_g1omk")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
