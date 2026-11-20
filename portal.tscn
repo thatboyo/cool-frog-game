@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bgb25s6p33bhh"]
+
+[ext_resource type="Script" uid="uid://qrro3tqajl4r" path="res://portal.gd" id="1_portal"]
+[ext_resource type="Texture2D" uid="uid://bdoffqnbkwsv4" path="res://sprites and stuff/Frog Portal.png.png" id="2_portal"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_portal"]
+atlas = ExtResource("2_portal")
+region = Rect2(240, 32, 160, 232)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_portal"]
+size = Vector2(140, 215)
+
+[node name="Portal" type="Area2D" unique_id=522325902]
+script = ExtResource("1_portal")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=147920521]
+texture = SubResource("AtlasTexture_portal")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1479809849]
+shape = SubResource("RectangleShape2D_portal")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

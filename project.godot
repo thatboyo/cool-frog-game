@@ -15,6 +15,10 @@ run/main_scene="uid://brgtvgcgu52xb"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://music/icon.svg"
 
+[autoload]
+
+Transition="*res://transition.gd"
+
 [display]
 
 window/stretch/mode="canvas_items"
