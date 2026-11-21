@@ -8,15 +8,18 @@ atlas = ExtResource("2_portal")
 region = Rect2(240, 32, 160, 232)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_portal"]
-size = Vector2(140, 215)
+size = Vector2(84, 102.5)
 
 [node name="Portal" type="Area2D" unique_id=522325902]
 script = ExtResource("1_portal")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=147920521]
+position = Vector2(3.8146973e-06, 0)
+scale = Vector2(0.46875, 0.42672414)
 texture = SubResource("AtlasTexture_portal")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1479809849]
 shape = SubResource("RectangleShape2D_portal")
+debug_color = Color(0.70295167, 0.44099832, 0.57868063, 0.41960785)
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

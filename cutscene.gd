@@ -2,7 +2,7 @@ extends Control
 
 
 
-@export var duration: float = 5.0  # seconds before auto-advancing 
+@export var duration: float = 5.0  # seconds before advance
 
 var _advancing := false
 
