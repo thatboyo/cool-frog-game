@@ -875,6 +875,6 @@ position = Vector2(99.31201, 62.229065)
 position = Vector2(388.45752, -102.45657)
 
 [node name="Portal" parent="." unique_id=522325902 instance=ExtResource("22_f8ci1")]
-position = Vector2(10550, -1138)
+position = Vector2(10570, -1137)
 cutscene_scene = "uid://blklr08e2fpm6"
 next_level = "uid://ba06abqfawdax"
