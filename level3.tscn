@@ -574,86 +574,140 @@ position = Vector2(6872, -893)
 [node name="Portal" parent="." unique_id=845129422 instance=ExtResource("20_gr4vk")]
 position = Vector2(15899, -162)
 
-[node name="fly" parent="." unique_id=481194354 instance=ExtResource("22_itrrf")]
+[node name="fly" parent="." unique_id=481194354 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(1, -14)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly2" parent="." unique_id=1556749016 instance=ExtResource("22_itrrf")]
+[node name="fly2" parent="." unique_id=1556749016 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(471, -67)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly3" parent="." unique_id=1784683579 instance=ExtResource("22_itrrf")]
+[node name="fly3" parent="." unique_id=1784683579 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(1042.2433, -190.0509)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly4" parent="." unique_id=1091946993 instance=ExtResource("22_itrrf")]
+[node name="fly4" parent="." unique_id=1091946993 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(1522.8481, -94.502686)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly5" parent="." unique_id=1591942409 instance=ExtResource("22_itrrf")]
+[node name="fly5" parent="." unique_id=1591942409 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(1571.6235, -303.4088)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly6" parent="." unique_id=618122902 instance=ExtResource("22_itrrf")]
+[node name="fly6" parent="." unique_id=618122902 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(1057.1807, -636.55365)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly7" parent="." unique_id=149536348 instance=ExtResource("22_itrrf")]
+[node name="fly7" parent="." unique_id=149536348 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(779.25275, -647.59717)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly9" parent="." unique_id=795577536 instance=ExtResource("22_itrrf")]
+[node name="fly9" parent="." unique_id=795577536 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(211.43286, -647.59717)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly10" parent="." unique_id=1884900664 instance=ExtResource("22_itrrf")]
+[node name="fly10" parent="." unique_id=1884900664 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(26.454315, -783.8003)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly11" parent="." unique_id=168877022 instance=ExtResource("22_itrrf")]
+[node name="fly11" parent="." unique_id=168877022 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(-273.56067, -850.9808)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly12" parent="." unique_id=1299009448 instance=ExtResource("22_itrrf")]
+[node name="fly12" parent="." unique_id=1299009448 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(-560.6915, -739.6255)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly13" parent="." unique_id=1348490522 instance=ExtResource("22_itrrf")]
+[node name="fly13" parent="." unique_id=1348490522 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(2331.5635, -265.2373)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly14" parent="." unique_id=1958304164 instance=ExtResource("22_itrrf")]
+[node name="fly14" parent="." unique_id=1958304164 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(2658.5435, -256.1267)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly15" parent="." unique_id=767083818 instance=ExtResource("22_itrrf")]
+[node name="fly15" parent="." unique_id=767083818 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(3009.8186, -344.1986)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly16" parent="." unique_id=35376499 instance=ExtResource("22_itrrf")]
+[node name="fly16" parent="." unique_id=35376499 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(3277.0713, -225.75708)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly17" parent="." unique_id=557854818 instance=ExtResource("22_itrrf")]
+[node name="fly17" parent="." unique_id=557854818 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(3944.1917, -222.72015)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly18" parent="." unique_id=1947117562 instance=ExtResource("22_itrrf")]
+[node name="fly18" parent="." unique_id=1947117562 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(4321.787, -287.50867)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly19" parent="." unique_id=871730037 instance=ExtResource("22_itrrf")]
+[node name="fly19" parent="." unique_id=871730037 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(4236.7524, -255.11444)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly20" parent="." unique_id=267041278 instance=ExtResource("22_itrrf")]
+[node name="fly20" parent="." unique_id=267041278 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(4683.1865, -149.83221)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly21" parent="." unique_id=1979308348 instance=ExtResource("22_itrrf")]
+[node name="fly21" parent="." unique_id=1979308348 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(5038.5103, -240.94147)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly22" parent="." unique_id=2120681927 instance=ExtResource("22_itrrf")]
+[node name="fly22" parent="." unique_id=2120681927 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(5651.977, -300.66864)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly23" parent="." unique_id=1578143288 instance=ExtResource("22_itrrf")]
+[node name="fly23" parent="." unique_id=1578143288 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(6162.7495, -346.59546)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly24" parent="." unique_id=936743760 instance=ExtResource("22_itrrf")]
+[node name="fly24" parent="." unique_id=936743760 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(6192.0728, -375.6522)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly25" parent="." unique_id=194720701 instance=ExtResource("22_itrrf")]
+[node name="fly25" parent="." unique_id=194720701 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(6218.464, -344.46286)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly26" parent="." unique_id=811948570 instance=ExtResource("22_itrrf")]
+[node name="fly26" parent="." unique_id=811948570 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(6179.544, -320.7376)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly28" parent="." unique_id=910716241 instance=ExtResource("22_itrrf")]
+[node name="fly28" parent="." unique_id=910716241 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(6297.12, -328.9961)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
-[node name="fly27" parent="." unique_id=2110851927 instance=ExtResource("22_itrrf")]
+[node name="fly27" parent="." unique_id=2110851927 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(6051.977, -454.13895)
+respawn_point = NodePath("../respawnPoint")
+you_died_ui = NodePath("../you_died_ui")
 
 [node name="fly" parent="fly27" unique_id=2037279610 instance=ExtResource("22_itrrf")]
 position = Vector2(34.285645, 217.14285)
