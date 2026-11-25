@@ -646,6 +646,7 @@ position = Vector2(6872, -893)
 
 [node name="Portal" parent="." unique_id=845129422 instance=ExtResource("20_gr4vk")]
 position = Vector2(15899, -162)
+next_level = "uid://cnn5kf0jef8ug"
 
 [node name="fly" parent="." unique_id=481194354 node_paths=PackedStringArray("respawn_point", "you_died_ui") instance=ExtResource("22_itrrf")]
 position = Vector2(1, -14)
