@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bnsiwkfjoe0oj"]
+
+[ext_resource type="Script" uid="uid://4idgp57o8cnb" path="res://lilypad_launcher.gd" id="1_uc3xa"]
+[ext_resource type="Texture2D" uid="uid://b0fqd4oj1rrxp" path="res://sprites and stuff/pixil-frame-0 (2).png" id="2_qjdnm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g1omk"]
+size = Vector2(30, 11)
+
+[node name="lilypad" type="Area2D" unique_id=1118981435]
+script = ExtResource("1_uc3xa")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1039988142]
+rotation = 0.79063416
+texture = ExtResource("2_qjdnm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=483477646]
+rotation = 0.41887903
+shape = SubResource("RectangleShape2D_g1omk")
+
+[node name="Label" type="Label" parent="." unique_id=1397870183]
+offset_left = -78.0
+offset_top = 16.0
+offset_right = 84.0
+offset_bottom = 39.0
+text = "BOUNCE FOWARDS!!!"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

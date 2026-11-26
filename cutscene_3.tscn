@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://da8dlv0pqgyqv"]
+
+[ext_resource type="Script" uid="uid://25fyas2wwtwd" path="res://cutscene.gd" id="1_wdkd4"]
+[ext_resource type="Texture2D" uid="uid://bdoffqnbkwsv4" path="res://sprites and stuff/Frog Portal.png.png" id="2_pu5oo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cut"]
+atlas = ExtResource("2_pu5oo")
+region = Rect2(240, 32, 160, 232)
+
+[node name="Cutscene2" type="Control" unique_id=205122135]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wdkd4")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1682651095]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.06, 0.12, 1)
+
+[node name="PortalArt" type="Sprite2D" parent="." unique_id=106771037]
+position = Vector2(576, 260)
+scale = Vector2(1.6, 1.6)
+texture = SubResource("AtlasTexture_cut")
+
+[node name="Label" type="Label" parent="." unique_id=622673495]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = 520.0
+offset_right = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "The frog portal takes you into the old mines..."
+horizontal_alignment = 1
