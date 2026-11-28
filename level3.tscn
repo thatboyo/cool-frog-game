@@ -23,6 +23,8 @@
 [ext_resource type="PackedScene" uid="uid://bd6q6cbymg6wd" path="res://lilypad.tscn" id="19_qbfqj"]
 [ext_resource type="PackedScene" uid="uid://bgb25s6p33bhh" path="res://portal.tscn" id="20_gr4vk"]
 [ext_resource type="PackedScene" uid="uid://bqjodbw2mgdxx" path="res://fly.tscn" id="22_itrrf"]
+[ext_resource type="PackedScene" path="res://level_lighting.tscn" id="24_0bsag"]
+[ext_resource type="PackedScene" path="res://light_source.tscn" id="25_s3sn0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lquwl"]
 texture = ExtResource("1_bs5pn")
@@ -945,3 +947,13 @@ offset_bottom = -177.10399
 text = "LEVEL 8
 "
 horizontal_alignment = 1
+
+[node name="LevelLighting" parent="." unique_id=1124497823 instance=ExtResource("24_0bsag")]
+brightness = 0.81
+tint = Color(0.95427924, 0.8096291, 0.8790522, 1)
+
+[node name="LightSource" parent="." unique_id=2097129412 instance=ExtResource("25_s3sn0")]
+position = Vector2(1163.0001, 35)
+scale = Vector2(7.769713, 1)
+radius = 1000.0
+light_color = Color(1, 0, 0, 1)

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://light_source.gd" id="1_ls"]
+[ext_resource type="Texture2D" path="res://sprites and stuff/light_gradient.png" id="2_ls"]
+
+[node name="LightSource" type="PointLight2D"]
+texture = ExtResource("2_ls")
+energy = 1.0
+texture_scale = 1.72
+color = Color(1, 0.88, 0.6, 1)
+script = ExtResource("1_ls")
